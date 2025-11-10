@@ -1,5 +1,5 @@
 <?php
-    namespace App\Controllers;
+    namespace app\models;
     use Illuminate\Database\Capsule\Manager as DB;
     use \PDO;
     use \PDOException;

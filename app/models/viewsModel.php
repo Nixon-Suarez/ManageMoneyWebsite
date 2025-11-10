@@ -4,11 +4,6 @@
         protected function obtenerVistasModelo($vistas){
             $listaBlanca = [
                 "dashboard",
-                "userNew",
-                "userList",
-                "userSearch",
-                "userUpdate",
-                "userPhoto",
                 "logout"
             ];
 
