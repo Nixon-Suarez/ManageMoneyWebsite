@@ -8,11 +8,12 @@
     }else{
         $url=["login"];
     }
+    $view = $url[0];
 ?>
 <!DOCTYPE html>
 <html lang="en">
   <?php require_once "./app/views/inc/head.php";?>
-  <body>
+  <body class="<?php echo ($view != 'login') ? 'body-dashboard' : ''; ?>">
     <?php
         use app\controllers\viewsController;
         use app\controllers\loginController;

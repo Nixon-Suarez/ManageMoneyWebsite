@@ -1,68 +1,136 @@
 body {
-            background: linear-gradient(135deg, #54bf87, #00b4d8);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: "Poppins", sans-serif;
-        }
+    background: linear-gradient(135deg, #54bf87, #00b4d8);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", sans-serif;
+}
 
-        .login-card {
-            background: #fff;
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            padding: 2rem;
-            width: 100%;
-            max-width: 380px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+.body-dashboard {
+    background: linear-gradient(135deg, #ffffff, #00b4d8);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+    font-family: "Poppins", sans-serif;
+}
 
-        .login-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-        }
+.login-card {
+    background: #fff;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    width: 100%;
+    max-width: 380px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        .login-card h5 {
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: #54bf87;
-        }
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
 
-        .form-label {
-            font-weight: 500;
-            color: #333;
-        }
+.login-card h5 {
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #54bf87;
+}
 
-        .form-control {
-            border-radius: 12px;
-            padding: 0.75rem;
-            border: 1px solid #ccc;
-            transition: border-color 0.2s;
-        }
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
 
-        .form-control:focus {
-            border-color: #54bf87;
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-        }
+.form-control {
+    border-radius: 12px;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    transition: border-color 0.2s;
+}
 
-        .btn-custom {
-            background: #54bf87;
-            color: white;
-            font-weight: 500;
-            border-radius: 50px;
-            padding: 0.75rem;
-            transition: all 0.3s ease;
-        }
+.form-control:focus {
+    border-color: #54bf87;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
 
-        .btn-custom:hover {
-            background: #0b5ed7;
-            transform: scale(1.03);
-        }
+.btn-custom {
+    background: #54bf87;
+    color: white;
+    font-weight: 500;
+    border-radius: 50px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
 
-        .footer-text {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 1rem;
-        }
+.btn-custom:hover {
+    background: #0b5ed7;
+    transform: scale(1.03);
+}
+
+.footer-text {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 1rem;
+}
+.navbar-custom {
+    background: linear-gradient(135deg, #0d6efd, #00b4d8);
+    padding: 0.8rem 1.5rem;
+}
+
+.navbar-custom .navbar-brand {
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-custom .navbar-brand img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.navbar-custom .nav-link {
+    color: #f1f1f1 !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: #fff !important;
+    text-shadow: 0 0 8px rgba(255,255,255,0.6);
+}
+
+.navbar-custom .dropdown-menu {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+}
+
+.navbar-custom .dropdown-item {
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-custom .dropdown-item:hover {
+    background-color: #e9f3ff;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}
