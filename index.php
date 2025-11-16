@@ -13,7 +13,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <?php require_once "./app/views/inc/head.php";?>
-  <body class="<?php echo ($view != 'login') ? 'body-dashboard' : ''; ?>">
+  <body class="<?php echo ($view == 'login' || $view == 'index') ? 'body-login' : 'body-dashboard'; ?>">
     <?php
         use app\controllers\viewsController;
         use app\controllers\loginController;

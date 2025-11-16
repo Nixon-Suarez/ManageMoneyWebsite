@@ -1,4 +1,4 @@
-body {
+.body-login {
     background: linear-gradient(135deg, #54bf87, #00b4d8);
     min-height: 100vh;
     display: flex;
