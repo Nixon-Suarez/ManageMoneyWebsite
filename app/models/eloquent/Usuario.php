@@ -13,7 +13,9 @@ class Usuario extends Model
     protected $fillable = [
         'nombre_usuario',
         'email',
-        'tipo'
+        'tipo',
+        'clave',
+        'usuario_usuario'
     ];
 
     protected $casts = [

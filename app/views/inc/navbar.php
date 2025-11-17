@@ -16,7 +16,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <!-- Dashboard -->
                 <li class="nav-item">
-                    <a class="nav-link active" href="<?php // echo APP_URL; ?>?view=dashboard">Dashboard</a>
+                    <a class="nav-link active" href="<?php echo APP_URL; ?>?view=dashboard">Dashboard</a>
                 </li>
 
                 <!-- Usuarios -->
@@ -43,7 +43,7 @@
                         <li><a class="dropdown-item" href="<?php // echo APP_URL . "?view=userUpdate/" . $_SESSION['id'] . "/"; ?>">Mi cuenta</a></li>
                         <li><a class="dropdown-item" href="<?php // echo APP_URL . "?view=userPhoto/" . $_SESSION['id'] . "/"; ?>">Mi foto</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="<?php // echo APP_URL; ?>?view=logout/" id="btn_exit">Salir</a></li>
+                        <li><a class="dropdown-item text-danger" href="<?php echo APP_URL; ?>?view=logout/" id="btn_exit">Salir</a></li>
                     </ul>
                 </li>
             </ul>
