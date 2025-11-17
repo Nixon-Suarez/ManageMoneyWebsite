@@ -15,7 +15,10 @@ class Usuario extends Model
         'email',
         'tipo',
         'clave',
-        'usuario_usuario'
+        'usuario_usuario',
+        'estado',
+        'fecha_creacion',
+        'fecha_actualizacion'
     ];
 
     protected $casts = [

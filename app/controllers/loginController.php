@@ -1,6 +1,7 @@
 <?php   
     namespace app\controllers;
     use app\models\mainModel;
+    use App\Models\Usuario;  
 
     class loginController extends mainModel {
         public function iniciarSesionControlador(){
@@ -39,9 +40,10 @@
                             });
                     </script>";
                 }else{
-                    $check_user = mainModel::eloquent()->table("usuario")->where("usuario_usuario", $usuario)->first();
+                    // $check_user = mainModel::eloquent()->table("usuario")->where("usuario_usuario", $usuario)->first();
+                    $check_user = Usuario::where("usuario_usuario", $usuario)->first();
                     if($check_user){
-                        if($check_user->usuario_usuario == $usuario && password_verify($clave, $check_user->usuario_clave)){
+                        if(password_verify($clave, $check_user->clave)){
                             $_SESSION['id'] = $check_user->id_usuario;
                             $_SESSION['nombre'] = $check_user->nombre_usuario;
                             $_SESSION['email'] = $check_user->email;

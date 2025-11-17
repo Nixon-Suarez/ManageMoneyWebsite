@@ -134,3 +134,9 @@
 .navbar-toggler-icon {
     filter: invert(1);
 }
+
+.asterisco-obligatorio {
+    color: red !important;
+    font-weight: bold;
+    margin-left: 5px;
+}

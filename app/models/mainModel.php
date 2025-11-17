@@ -4,27 +4,9 @@
     use \PDO;
     use \PDOException;
     class mainModel{
-        // private $server = "localhost";
-        // private $db = "bd_manage_money_website";
-        // private $user = "root";
-        // private $pass = "";
-
-        // // conexion BD
-        // protected function conexion(){
-        //     try{
-        //         $connect = new PDO("mysql:host=".$this->server.";dbname=".$this->db, $this->user, $this->pass);
-        //         $connect->exec("SET CHARACTER SET utf8");# define que la codificacion de caracteres sea utf8
-        //         return $connect;
-        //     }
-        //     catch(PDOException $e){
-        //         die("Error de conexion: ".$e->getMessage());
-        //     }
-        // }
-
-        protected function eloquent(){
-        return DB::connection();
-    }
-
+        // protected function eloquent(){
+        // return DB::connection();
+        // } #usar cuando se quiera usar Query Builder de Eloquent
         public function limpiarCadena($cadena){
             $palabras = ["<script>", "</script>", "<script src>", "<script type=", "SELECT * FROM",  "DELETE FROM",  "INSERT INTO",  "DROP TABLE",  "DROP DATABASE", "TRUNCATE TABLA",   "SHOW TABLES;", "SHOW DATABASE;", "<?php", "?>", "--", "^", "<", ">", "[", "]", "==", ";", "::"];
             $cadena = trim($cadena); //quita espacios en blanco
