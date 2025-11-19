@@ -15,14 +15,16 @@ class Egreso extends Model
         'descripcion',
         'fecha_actualizacion',
         'id_mes',
-        'id_usuario'
+        'id_usuario',
+        'id_categoria_gasto'
     ];
 
     protected $casts = [
         'valor_egreso' => 'decimal:2',
         'fecha_actualizacion' => 'date',
         'id_mes' => 'integer',
-        'id_usuario' => 'integer'
+        'id_usuario' => 'integer',
+        'id_categoria_gasto' => 'integer'
     ];
 
     // Relaciones
@@ -36,6 +38,18 @@ class Egreso extends Model
         return $this->belongsTo(Mes::class, 'id_mes', 'id_mes');
     }
 
+    // NUEVA RELACIÓN
+    public function categoriaGasto()
+    {
+        return $this->belongsTo(CategoriaGasto::class, 'id_categoria_gasto', 'id_categoria_gasto');
+    }
+
+    // Alias para mayor claridad
+    public function categoria()
+    {
+        return $this->categoriaGasto();
+    }
+
     // Scopes
     public function scopePorUsuario($query, $idUsuario)
     {
@@ -47,13 +61,23 @@ class Egreso extends Model
         return $query->where('id_mes', $idMes);
     }
 
+    public function scopePorCategoria($query, $idCategoria)
+    {
+        return $query->where('id_categoria_gasto', $idCategoria);
+    }
+
     public function scopeDelMesActual($query)
     {
         return $query->whereMonth('fecha_actualizacion', date('m'))
                      ->whereYear('fecha_actualizacion', date('Y'));
     }
 
-    // Método para calcular total de egresos
+    public function scopeSinCategoria($query)
+    {
+        return $query->whereNull('id_categoria_gasto');
+    }
+
+    // Métodos útiles
     public static function totalPorUsuario($idUsuario, $idMes = null)
     {
         $query = self::where('id_usuario', $idUsuario);
@@ -63,5 +87,37 @@ class Egreso extends Model
         }
         
         return $query->sum('valor_egreso');
+    }
+
+    public static function totalPorCategoria($idCategoria, $idMes = null)
+    {
+        $query = self::where('id_categoria_gasto', $idCategoria);
+        
+        if ($idMes) {
+            $query->where('id_mes', $idMes);
+        }
+        
+        return $query->sum('valor_egreso');
+    }
+
+    public static function resumenPorCategorias($idUsuario, $idMes = null)
+    {
+        $query = self::with('categoriaGasto')
+                     ->where('id_usuario', $idUsuario);
+        
+        if ($idMes) {
+            $query->where('id_mes', $idMes);
+        }
+        
+        return $query->get()
+                     ->groupBy('id_categoria_gasto')
+                     ->map(function ($egresos) {
+                         return [
+                             'categoria' => $egresos->first()->categoriaGasto->nombre_categoria_gasto ?? 'Sin categoría',
+                             'total' => $egresos->sum('valor_egreso'),
+                             'cantidad' => $egresos->count(),
+                             'promedio' => $egresos->avg('valor_egreso')
+                         ];
+                     });
     }
 }

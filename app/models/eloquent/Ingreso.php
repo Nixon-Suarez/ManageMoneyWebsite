@@ -15,14 +15,16 @@ class Ingreso extends Model
         'descripcion',
         'fecha_actualizacion',
         'id_mes',
-        'id_usuario'
+        'id_usuario',
+        'id_categoria_ingreso'
     ];
 
     protected $casts = [
         'valor_ingreso' => 'decimal:2',
         'fecha_actualizacion' => 'date',
         'id_mes' => 'integer',
-        'id_usuario' => 'integer'
+        'id_usuario' => 'integer',
+        'id_categoria_ingreso' => 'integer'
     ];
 
     // Relaciones

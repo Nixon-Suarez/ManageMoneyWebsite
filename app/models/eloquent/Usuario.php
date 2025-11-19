@@ -57,4 +57,13 @@ class Usuario extends Model
     {
         return $this->tipo === 1;
     }
+    public function categoriasGasto()
+    {
+        return $this->hasMany(CategoriaGasto::class, 'id_usuario', 'id_usuario');
+    }
+    
+    public function categoriasIngresos()
+    {
+        return $this->hasMany(CategoriaIngreso::class, 'id_usuario', 'id_usuario');
+    }
 }
