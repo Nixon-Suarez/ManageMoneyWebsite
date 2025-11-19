@@ -16,7 +16,8 @@ class Ingreso extends Model
         'fecha_actualizacion',
         'id_mes',
         'id_usuario',
-        'id_categoria_ingreso'
+        'id_categoria_ingreso',
+        'ingresoAdjunto'
     ];
 
     protected $casts = [
@@ -24,7 +25,8 @@ class Ingreso extends Model
         'fecha_actualizacion' => 'date',
         'id_mes' => 'integer',
         'id_usuario' => 'integer',
-        'id_categoria_ingreso' => 'integer'
+        'id_categoria_ingreso' => 'integer',
+        'ingresoAdjunto' => 'string'
     ];
 
     // Relaciones
