@@ -1,7 +1,7 @@
 <?php
+    require_once "autoload.php";
     require_once "./config/app.php";
     require_once "./app/views/inc/session_start.php";
-    require_once "autoload.php";
 
     if(isset($_GET['view'])){
         $url = explode("/",$_GET['view']); # explode -> splits a string usinga a delimiter

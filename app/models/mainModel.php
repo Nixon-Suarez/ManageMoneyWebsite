@@ -5,7 +5,7 @@
     use \PDOException;
     class mainModel{
         protected function eloquent(){
-        return DB::connection();
+            return DB::connection();
         } #usar cuando se quiera usar Query Builder de Eloquent
         public function limpiarCadena($cadena){
             $palabras = ["<script>", "</script>", "<script src>", "<script type=", "SELECT * FROM",  "DELETE FROM",  "INSERT INTO",  "DROP TABLE",  "DROP DATABASE", "TRUNCATE TABLA",   "SHOW TABLES;", "SHOW DATABASE;", "<?php", "?>", "--", "^", "<", ">", "[", "]", "==", ";", "::"];

@@ -1,11 +1,12 @@
 // Inicializar el gráfico de finanzas
 document.addEventListener('DOMContentLoaded', function() {
+  const chartCanvas = document.getElementById('financeChart'); 
   const ctx = document.getElementById('financeChart').getContext('2d');
 
   // Datos para el gráfico
   const monthLabels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-  const incomeData = [2100, 2250, 2450, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const expenseData = [1350, 1450, 1275, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const incomeData = JSON.parse(chartCanvas.dataset.income);
+  const expenseData = JSON.parse(chartCanvas.dataset.expense);
   
   const financeChart = new Chart(ctx, {
     type: 'line',
