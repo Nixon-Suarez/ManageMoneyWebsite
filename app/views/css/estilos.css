@@ -31,9 +31,10 @@
     background: linear-gradient(135deg, #ffffff, #00b4d8);
     min-height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;    
+    /* align-items: center;
+    justify-content: center;     */
     font-family: "Poppins", sans-serif;
+    padding-top: 80px;
 }
 
 .login-card {
@@ -159,4 +160,12 @@
     color: red !important;
     font-weight: bold;
     margin-left: 5px;
+}
+thead.custom-header {
+    background: linear-gradient(135deg, #00b4d8, #54bf87) !important;
+}
+
+thead.custom-header th {
+    color: #ffffff !important;
+    background: transparent !important;
 }

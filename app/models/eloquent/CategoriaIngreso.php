@@ -11,11 +11,13 @@ class CategoriaIngreso extends Model
 
     protected $fillable = [
         'nombre_categoria_ingreso',
-        'id_usuario'
+        'id_usuario',
+        'estado'
     ];
 
     protected $casts = [
-        'id_usuario' => 'integer'
+        'id_usuario' => 'integer',
+        'estado' => 'string'
     ];
 
     // Relaciones

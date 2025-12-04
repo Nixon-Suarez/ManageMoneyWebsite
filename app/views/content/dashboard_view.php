@@ -84,6 +84,4 @@
             </div>
         </div>
     </div>
-
-<script id="app-script" src="<?php echo APP_URL;?>app/views/js/grafico.js"></script>
 </div>

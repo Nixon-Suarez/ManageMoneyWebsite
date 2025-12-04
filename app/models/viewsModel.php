@@ -4,7 +4,8 @@
         protected function obtenerVistasModelo($vistas){
             $listaBlanca = [
                 "dashboard",
-                "logout"
+                "logout",   
+                "categorias"
             ];
 
             if(in_array($vistas, $listaBlanca)) {

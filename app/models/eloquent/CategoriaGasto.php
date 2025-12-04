@@ -12,11 +12,13 @@ class CategoriaGasto extends Model
 
     protected $fillable = [
         'nombre_categoria_gasto',
-        'id_usuario'
+        'id_usuario',
+        'estado'
     ];
 
     protected $casts = [
-        'id_usuario' => 'integer'
+        'id_usuario' => 'integer',
+        'estado' => 'string'
     ];
 
     // Relaciones
