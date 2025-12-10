@@ -94,7 +94,6 @@
                             <button type="submit" class="btn btn-custom">Registrar</button>
                         </div>
                     </form>
-                    <p class="footer-text">© 2025 ManageMoneyWebsite</p>
                 </div>
             </div>
         </div>

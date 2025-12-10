@@ -1,10 +1,9 @@
-<div class="container-fluid py-5 text-center">
+<div class="container py-4 content">
     <?php
         use app\controllers\dashboardController;
         $insdashboard = new dashboardController ();
         $insdashboard = $insdashboard->getDataDashboard();
     ?>
-        <br><br>
     <!-- Imagen centrada -->
     <div class="d-flex justify-content-center mb-3">
         <figure class="m-0">

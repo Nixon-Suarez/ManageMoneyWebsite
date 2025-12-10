@@ -1,12 +1,16 @@
 <nav class="navbar navbar-expand-lg navbar-custom shadow-sm fixed-top">
     <div class="container-fluid">
+        <!-- Botón para colapsar la sidebar-->
+        <button id="btnToggle" class="btn btn-outline-light mb-3 me-3">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <!-- Marca -->
-        <a class="navbar-brand" href="<?php echo APP_URL; ?>?view=dashboard">
-            <img src="<?php echo APP_URL; ?>app/views/img/Money.png" alt="Logo" width="112" height="28">
+        <a class="navbar-brand me-2" href="<?php echo APP_URL; ?>?view=dashboard">
+            <img src="<?php echo APP_URL; ?>app/views/img/Money.png" class="img-profile me-2">
         </a>
 
         <!-- Botón colapsable (móvil) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+        <button class="navbar-toggler btn btn-outline-light " type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
             aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -25,9 +29,18 @@
                         Usuarios
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="usuariosDropdown">
-                        <li><a class="dropdown-item" href="<?php // echo APP_URL; ?>?view=userNew/">Nuevo</a></li>
-                        <li><a class="dropdown-item" href="<?php // echo APP_URL; ?>?view=userList">Lista</a></li>
-                        <li><a class="dropdown-item" href="<?php // echo APP_URL; ?>?view=userSearch">Buscar</a></li>
+                        <li><a class="dropdown-item" href="<?php echo APP_URL; ?>?view=userNew/">Nuevo</a></li>
+                        <li><a class="dropdown-item" href="<?php echo APP_URL; ?>?view=userList">Lista</a></li>
+                        <li><a class="dropdown-item" href="<?php echo APP_URL; ?>?view=userSearch">Buscar</a></li>
+                    </ul>
+                </li>
+                <!-- categorias -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="usuariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categorias
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="usuariosDropdown">
+                        <li><a class="dropdown-item" href="<?php echo APP_URL; ?>?view=categorias/">categorias</a></li>
                     </ul>
                 </li>
             </ul>

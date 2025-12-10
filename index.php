@@ -32,6 +32,7 @@
             }
             else{
             require_once "./app/views/inc/navbar.php";
+            require_once "./app/views/inc/sidebar.php";
             require_once $vista;
             }
         }
