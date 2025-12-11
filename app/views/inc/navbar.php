@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-custom shadow-sm fixed-top">
     <div class="container-fluid">
         <!-- Botón para colapsar la sidebar-->
-        <button id="btnToggle" class="btn btn-outline-light mb-3 me-3">
+        <!-- <button id="btnToggle" class="btn btn-outline-light mb-3 me-3">
             <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> -->
         <!-- Marca -->
         <a class="navbar-brand me-2" href="<?php echo APP_URL; ?>?view=dashboard">
             <img src="<?php echo APP_URL; ?>app/views/img/Money.png" class="img-profile me-2">

@@ -15,8 +15,8 @@
 
                 <!-- Nombre -->
                 <div class="col-md-5">
-                    <label class="form-label">Nombre Categoria</label>
-                    <input type="text" name="txt_buscador" 
+                    <label for="txt_buscador" class="form-label">Nombre Categoria</label>
+                    <input id="txt_buscador" type="text" name="txt_buscador" 
                            class="form-control rounded-pill"
                            placeholder="¿Qué estás buscando?"
                            pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]{1,30}"
@@ -25,11 +25,11 @@
 
                 <!-- Tipo -->
                 <div class="col-md-5">
-                    <label class="form-label">Tipo</label>
+                    <label for="tipo_categoria" class="form-label">Tipo</label>
                     <?php 
                         $current_tipo = isset($_SESSION[$url[0]]['tipo_categoria']) ? $_SESSION[$url[0]]['tipo_categoria'] : 'ingreso';
                     ?>
-                    <select name="tipo_categoria" class="form-control rounded-pill" required>
+                    <select id="tipo_categoria" name="tipo_categoria" class="form-control rounded-pill" required>
                         <option value="ingreso" <?php echo ($current_tipo === 'ingreso') ? 'selected' : ''; ?>>Ingreso</option>
                         <option value="gasto"   <?php echo ($current_tipo === 'gasto') ? 'selected' : ''; ?>>Gasto</option>
                     </select>
@@ -40,6 +40,11 @@
                     <button type="submit" class="btn btn-primary rounded-pill w-100">
                         Buscar
                     </button>
+                </div>
+
+                <!-- Botón Registrar Categoria-->
+                <div class="d-grid mt-4">
+                    <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#modalRegisterCategoria">Registrar Categoria</button>
                 </div>
 
             </form>
@@ -55,53 +60,46 @@
         ?>
     </div>
     <!-- Modal crear categoria -->
-    <div class="modal fade" id="modalRegister" tabindex="-1" aria-labelledby="modalRegisterLabel" aria-hidden="true">
+    <div class="modal fade" id="modalRegisterCategoria" tabindex="-1" aria-labelledby="modalRegisterLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalRegisterLabel">Registro</h5>
+                    <h5 class="modal-title" id="modalRegisterLabel">Registro Categoria</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
                     <form class="FormularioAjax" action="<?php echo APP_URL?>app/ajax/FunctionAjax.php" method="POST" autocomplete="off">
-                        <input type="hidden" name="modulo_usuario" value="registrar">
-                        <!-- Usuario -->
+                        <input type="hidden" name="modulo_usuario" value="registrar_categoria">
+                        <!-- Nombre Categoria -->
                         <div class="mb-3">
-                            <label for="register_usuario" class="form-label">Usuario</label>
-                            <label for="register_usuario" class="form-label asterisco-obligatorio">*</label>
-                            <input type="text" class="form-control" id="register_usuario" name="register_usuario"
+                            <label for="register_nombre_categoria" class="form-label">Nombre Categoria</label>
+                            <label for="register_nombre_categoria" class="form-label asterisco-obligatorio">*</label>
+                            <input type="text" class="form-control" id="register_nombre_categoria" name="register_nombre_categoria"
                                 pattern="[a-zA-Z0-9]{4,20}" maxlength="20" required>
                         </div>
 
-                        <!-- Nombre -->
+                        <!-- Tipo -->
                         <div class="mb-3">
-                            <label for="register_clave" class="form-label">Nombre Completo</label>
-                            <label for="register_usuario" class="form-label asterisco-obligatorio">*</label>
-                            <input type="text" class="form-control" id="register_nombre" name="register_nombre"
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}" maxlength="100" required>
+                            <label for="register_tipo_categoria" class="form-label">Tipo</label>
+                            <label for="register_tipo_categoria" class="form-label asterisco-obligatorio">*</label>
+                            <?php 
+                                $current_tipo = isset($_SESSION[$url[0]]['tipo_categoria']) ? $_SESSION[$url[0]]['tipo_categoria'] : 'ingreso';
+                            ?>
+                            <select id="register_tipo_categoria" name="register_tipo_categoria" class="form-control" required>
+                                <option value="ingreso" <?php echo ($current_tipo === 'ingreso') ? 'selected' : ''; ?>>Ingreso</option>
+                                <option value="gasto"   <?php echo ($current_tipo === 'gasto') ? 'selected' : ''; ?>>Gasto</option>
+                            </select>
                         </div>
                         
-                        <!-- Email -->
+                        <!-- Estado -->
                         <div class="mb-3">
-                            <label for="register_clave" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="register_email" name="register_email" maxlength="100">
-                        </div>
-                        
-                        <!-- Clave -->
-                        <div class="mb-3">
-                            <label for="register_clave" class="form-label">Clave</label>
-                            <label for="register_usuario" class="form-label asterisco-obligatorio">*</label>
-                            <input type="password" class="form-control" id="register_clave1" name="register_clave1"
-                                pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" required>
-                        </div>
-
-                        <!-- Clave confirmacion -->
-                        <div class="mb-3">
-                            <label for="register_clave" class="form-label">Confirmacion Clave</label>
-                            <label for="register_usuario" class="form-label asterisco-obligatorio">*</label>
-                            <input type="password" class="form-control" id="register_clave2" name="register_clave2"
-                                pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" required>
+                            <label for="register_estado_categoria" class="form-label">Estado</label>
+                            <label for="register_estado_categoria" class="form-label asterisco-obligatorio">*</label>
+                            <select id="register_estado_categoria" name="register_estado_categoria" class="form-control" required>
+                                <option value="activo" selected>Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
                         </div>
 
                         <!-- Botón Registrase-->

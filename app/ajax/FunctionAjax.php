@@ -12,15 +12,15 @@
         if($_POST['modulo_usuario'] == "registrar"){
             echo $insUsuario->registrarUsuarioControlador();
         }
-        if(isset($_SESSION['usuario_id']) && $_SESSION['usuario_id']!=""){
-            if($_POST['modulo_usuario'] == "categorias"){
+        if(isset($_SESSION['id']) || $_SESSION['id']!=""){
+            if($_POST['modulo_usuario'] == "registrar_categoria"){
                 echo $insCategorias->crearCategoriaControlador();
             }
-            // if($_POST['modulo_usuario'] == "actualizar"){
+            // if($_POST['modulo_usuario'] == "insCategorias"){
             //     echo $insUsuario->actualizarUsuarioControlador();
             // }
         }
-    }if(isset($_POST['modulo_buscador'])){
+    }else if(isset($_POST['modulo_buscador'])){
         $insBuscador = new searchController();
         if($_POST['modulo_buscador'] == "buscar_categoria")
             echo $insBuscador->buscarDatosControlador();

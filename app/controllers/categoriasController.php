@@ -7,7 +7,82 @@
 
     class categoriasController extends mainModel {   
         public function crearCategoriaControlador(){
-            // Código para crear una categoría
+            #Almacenar Datos
+            $nombre_categoria = $this->limpiarCadena($_POST['register_nombre_categoria']);
+            $tipo_categoria = $this->limpiarCadena($_POST['register_tipo_categoria']);
+            $estado_categoria = $this->limpiarCadena($_POST['register_estado_categoria']);
+            // verificar campos obligatorios
+            if($nombre_categoria=="" || $tipo_categoria=="" || $estado_categoria==""){
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrio un error inesperado",
+                    "texto" => "No has llenado todos los campos que son obligatorios",
+                    "icono" => "error"
+                ];
+                return json_encode($alerta);
+            }
+
+            #Verificando integridad de los datos
+            if($this->verificarDatos("^[a-zA-Z0-9]{4,20}$", $nombre_categoria)){
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrio un error inesperado",
+                    "texto" => "El nombre de la categoría no coincide con el formato solicitado",
+                    "icono" => "error"
+                ];
+                return json_encode($alerta);
+            }
+            // verificar que el nombre sea unico segun el tipo
+            if($tipo_categoria == "gasto"){
+                $nombre = 'nombre_categoria_gasto';
+                $modelo = CategoriaGasto::class;
+            }else if($tipo_categoria == "ingreso"){
+                $nombre = 'nombre_categoria_ingreso';
+                $modelo = CategoriaIngreso::class;
+            }else{
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrio un error inesperado",
+                    "texto" => "El tipo de categoría no es válido",
+                    "icono" => "error"
+                ];
+                return json_encode($alerta);
+            }
+            $check_nombre = $modelo::where($nombre, $nombre_categoria)
+                    ->where("id_usuario", $_SESSION['id'])
+                    ->first();
+                if($check_nombre){
+                    $alerta = [
+                        "tipo" => "simple",
+                        "titulo" => "Ocurrio un error inesperado",
+                        "texto" => "El nombre de la categoría ya se encuentra registrado",
+                        "icono" => "error"
+                    ];
+                    return json_encode($alerta);
+                }
+                // Preparando datos para el registro
+                $datos_categoria_reg = [
+                    $nombre => $nombre_categoria,
+                    "id_usuario" => $_SESSION['id'],
+                    "estado" => $estado_categoria
+                ];
+                $nueva_categoria = $modelo::create($datos_categoria_reg);
+                if($nueva_categoria){
+                    $alerta = [
+                        "tipo" => "recargar",
+                        "titulo" => "Usuario registrado",
+                        "texto" => "La categoria ". $nombre_categoria ." ha sido registrada exitosamente",
+                        "icono" => "success"
+                    ];
+                }else{
+                    $alerta = [
+                        "tipo" => "simple",
+                        "titulo" => "Ocurrio un error inesperado",
+                        "texto" => "No se pudo registrar la categoría",
+                        "icono" => "error"
+                    ];
+                }
+                return json_encode($alerta);
         }
         public function listarCategoriaControlador($pagina, $registros, $url, $busqueda, $tipo_categoria){
             $pagina = $this->limpiarCadena($pagina);
@@ -79,8 +154,8 @@
                     $tabla.='
                         <tr class="text-center">
                             <td>'.$contador.'</td>
-                            <td>'.$rows->nombre_categoria_ingreso.'</td>
-                            <td>'.$rows->estado.'</td>
+                            <td>'.$rows->$nombre.'</td>
+                            <td>'.strtoupper($rows->estado).'</td>
                             <td class="d-flex justify-content-center gap-2">
                                 <!-- Editar -->
                                 <a href="'.APP_URL.'?view=categoria_gasto_update&categoria_id_up='.$rows['id_categoria_gasto'].'" class="btn btn-success btn-sm">
