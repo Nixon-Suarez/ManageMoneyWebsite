@@ -1,110 +1,112 @@
-<?php 
-    namespace app\controllers;
-    use app\models\mainModel;
-    use App\Models\CategoriaGasto;
-    use App\Models\CategoriaIngreso;
-    
+<?php
 
-    class categoriasController extends mainModel {   
-        public function crearCategoriaControlador(){
-            #Almacenar Datos
-            $nombre_categoria = $this->limpiarCadena($_POST['register_nombre_categoria']);
-            $tipo_categoria = $this->limpiarCadena($_POST['register_tipo_categoria']);
-            $estado_categoria = $this->limpiarCadena($_POST['register_estado_categoria']);
-            // verificar campos obligatorios
-            if($nombre_categoria=="" || $tipo_categoria=="" || $estado_categoria==""){
-                $alerta = [
-                    "tipo" => "simple",
-                    "titulo" => "Ocurrio un error inesperado",
-                    "texto" => "No has llenado todos los campos que son obligatorios",
-                    "icono" => "error"
-                ];
-                return json_encode($alerta);
-            }
+namespace app\controllers;
 
-            #Verificando integridad de los datos
-            if($this->verificarDatos("^[a-zA-Z0-9]{4,20}$", $nombre_categoria)){
-                $alerta = [
-                    "tipo" => "simple",
-                    "titulo" => "Ocurrio un error inesperado",
-                    "texto" => "El nombre de la categoría no coincide con el formato solicitado",
-                    "icono" => "error"
-                ];
-                return json_encode($alerta);
-            }
-            // verificar que el nombre sea unico segun el tipo
-            if($tipo_categoria == "gasto"){
-                $nombre = 'nombre_categoria_gasto';
-                $modelo = CategoriaGasto::class;
-            }else if($tipo_categoria == "ingreso"){
-                $nombre = 'nombre_categoria_ingreso';
-                $modelo = CategoriaIngreso::class;
-            }else{
-                $alerta = [
-                    "tipo" => "simple",
-                    "titulo" => "Ocurrio un error inesperado",
-                    "texto" => "El tipo de categoría no es válido",
-                    "icono" => "error"
-                ];
-                return json_encode($alerta);
-            }
-            $check_nombre = $modelo::where($nombre, $nombre_categoria)
-                    ->where("id_usuario", $_SESSION['id'])
-                    ->first();
-                if($check_nombre){
-                    $alerta = [
-                        "tipo" => "simple",
-                        "titulo" => "Ocurrio un error inesperado",
-                        "texto" => "El nombre de la categoría ya se encuentra registrado",
-                        "icono" => "error"
-                    ];
-                    return json_encode($alerta);
-                }
-                // Preparando datos para el registro
-                $datos_categoria_reg = [
-                    $nombre => $nombre_categoria,
-                    "id_usuario" => $_SESSION['id'],
-                    "estado" => $estado_categoria
-                ];
-                $nueva_categoria = $modelo::create($datos_categoria_reg);
-                if($nueva_categoria){
-                    $alerta = [
-                        "tipo" => "recargar",
-                        "titulo" => "Usuario registrado",
-                        "texto" => "La categoria ". $nombre_categoria ." ha sido registrada exitosamente",
-                        "icono" => "success"
-                    ];
-                }else{
-                    $alerta = [
-                        "tipo" => "simple",
-                        "titulo" => "Ocurrio un error inesperado",
-                        "texto" => "No se pudo registrar la categoría",
-                        "icono" => "error"
-                    ];
-                }
-                return json_encode($alerta);
+use app\models\mainModel;
+use App\Models\CategoriaGasto;
+use App\Models\CategoriaIngreso;
+
+
+class categoriasController extends mainModel{
+    public function crearCategoriaControlador(){
+        #Almacenar Datos
+        $nombre_categoria = $this->limpiarCadena($_POST['nombre_categoria']);
+        $tipo_categoria = $this->limpiarCadena($_POST['tipo_categoria']);
+        $estado_categoria = $this->limpiarCadena($_POST['estado_categoria']);
+        // verificar campos obligatorios
+        if ($nombre_categoria == "" || $tipo_categoria == "" || $estado_categoria == "") {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "No has llenado todos los campos que son obligatorios",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
         }
-        public function listarCategoriaControlador($pagina, $registros, $url, $busqueda, $tipo_categoria){
-            $pagina = $this->limpiarCadena($pagina);
-            $registros = $this->limpiarCadena($registros);
-            $busqueda = $this->limpiarCadena($busqueda);
-            $tipo_categoria = $this->limpiarCadena($tipo_categoria);
-            $url = $this->limpiarCadena($url);
-            $url= APP_URL ."?view=". $url."/";
-            $pagina = (isset($pagina) && $pagina>0) ? (int)$pagina : 1;
-            $inicio = ($pagina>0) ? (($registros * $pagina) - $registros) : 0;
-            $registros = ($registros > 0) ? (int)$registros : 10;
-            $tipo_categoria = ($tipo_categoria != "") ? $tipo_categoria : "ingreso";
-            if($tipo_categoria == "gasto"){
-                $id = 'id_categoria_gasto';
-                $nombre = 'nombre_categoria_gasto';
-                $modelo = CategoriaGasto::class;
-            }else if ($tipo_categoria == "ingreso"){
-                $id = 'id_categoria_ingreso';
-                $nombre = 'nombre_categoria_ingreso';
-                $modelo = CategoriaIngreso::class;
-            }else{
-                return "<script>
+
+        #Verificando integridad de los datos
+        if ($this->verificarDatos("^[a-zA-Z0-9]{4,20}$", $nombre_categoria)) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El nombre de la categoría no coincide con el formato solicitado",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        // verificar que el nombre sea unico segun el tipo
+        if ($tipo_categoria == "gasto") {
+            $nombre = 'nombre_categoria_gasto';
+            $modelo = CategoriaGasto::class;
+        } else if ($tipo_categoria == "ingreso") {
+            $nombre = 'nombre_categoria_ingreso';
+            $modelo = CategoriaIngreso::class;
+        } else {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El tipo de categoría no es válido",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        $check_nombre = $modelo::where($nombre, $nombre_categoria)
+            ->where("id_usuario", $_SESSION['id'])
+            ->first();
+        if ($check_nombre) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El nombre de la categoría ya se encuentra registrado",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        // Preparando datos para el registro
+        $datos_categoria_reg = [
+            $nombre => $nombre_categoria,
+            "id_usuario" => $_SESSION['id'],
+            "estado" => $estado_categoria
+        ];
+        $nueva_categoria = $modelo::create($datos_categoria_reg);
+        if ($nueva_categoria) {
+            $alerta = [
+                "tipo" => "recargar",
+                "titulo" => "Usuario registrado",
+                "texto" => "La categoria " . $nombre_categoria . " ha sido registrada exitosamente",
+                "icono" => "success"
+            ];
+        } else {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "No se pudo registrar la categoría",
+                "icono" => "error"
+            ];
+        }
+        return json_encode($alerta);
+    }
+    public function listarCategoriaControlador($pagina, $registros, $url, $busqueda, $tipo_categoria){
+        $pagina = $this->limpiarCadena($pagina);
+        $registros = $this->limpiarCadena($registros);
+        $busqueda = $this->limpiarCadena($busqueda);
+        $tipo_categoria = $this->limpiarCadena($tipo_categoria);
+        $url = $this->limpiarCadena($url);
+        $url = APP_URL . "?view=" . $url . "/";
+        $pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;
+        $inicio = ($pagina > 0) ? (($registros * $pagina) - $registros) : 0;
+        $registros = ($registros > 0) ? (int)$registros : 10;
+        $tipo_categoria = ($tipo_categoria != "") ? $tipo_categoria : "ingreso";
+        if ($tipo_categoria == "gasto") {
+            $id = 'id_categoria_gasto';
+            $nombre = 'nombre_categoria_gasto';
+            $modelo = CategoriaGasto::class;
+        } else if ($tipo_categoria == "ingreso") {
+            $id = 'id_categoria_ingreso';
+            $nombre = 'nombre_categoria_ingreso';
+            $modelo = CategoriaIngreso::class;
+        } else {
+            return "<script>
                     Swal.fire({
                         title: 'Ocurrió un error inesperado',
                         text: 'Tipo de categoría no válido',
@@ -112,27 +114,27 @@
                         confirmButtonText: 'Aceptar'
                     });
                 </script>";
-            }
-            if(!empty($busqueda)){
-                $consulta_datos = $modelo::where($nombre, 'LIKE', "%$busqueda%")
-                    ->where('id_usuario', $_SESSION['id'])
-                    ->orderBy($id, 'DESC')
-                    ->skip($inicio)
-                    ->take($registros)
-                    ->get();
-                $consulta_total = $modelo::where($nombre, 'LIKE', "%$busqueda%")
-                    ->where('id_usuario', $_SESSION['id'])
-                    ->count();
-            }else{
-                $consulta_datos = $modelo::orderBy($id, 'DESC')
-                    ->where('id_usuario', $_SESSION['id'])
-                    ->skip($inicio)
-                    ->take($registros)
-                    ->get();
-                $consulta_total =  $modelo::where('id_usuario', $_SESSION['id'])->count();
-            }
-            $numeroPaginas = ceil($consulta_total / $registros);
-            $tabla = ' 
+        }
+        if (!empty($busqueda)) {
+            $consulta_datos = $modelo::where($nombre, 'LIKE', "%$busqueda%")
+                ->where('id_usuario', $_SESSION['id'])
+                ->orderBy($id, 'DESC')
+                ->skip($inicio)
+                ->take($registros)
+                ->get();
+            $consulta_total = $modelo::where($nombre, 'LIKE', "%$busqueda%")
+                ->where('id_usuario', $_SESSION['id'])
+                ->count();
+        } else {
+            $consulta_datos = $modelo::orderBy($id, 'DESC')
+                ->where('id_usuario', $_SESSION['id'])
+                ->skip($inicio)
+                ->take($registros)
+                ->get();
+            $consulta_total =  $modelo::where('id_usuario', $_SESSION['id'])->count();
+        }
+        $numeroPaginas = ceil($consulta_total / $registros);
+        $tabla = ' 
                 <br>
                 <!-- Tabla -->
                 <div class="table-responsive mt-3">
@@ -147,66 +149,78 @@
                         </thead>
                         <tbody>
             ';
-            if($consulta_total && $pagina<=$numeroPaginas){
-                $contador=$inicio+1;
-                $pag_inicio=$inicio+1;
-                foreach($consulta_datos as $rows){
-                    $tabla.='
+        if ($consulta_total && $pagina <= $numeroPaginas) {
+            $contador = $inicio + 1;
+            $pag_inicio = $inicio + 1;
+            foreach ($consulta_datos as $rows) {
+                if ($rows->estado == "activo") {
+                    $btn_apagar_class = 'btn-danger btn-sm';
+                } else {
+                    $btn_apagar_class = 'btn-primary btn-sm';
+                }
+                $tabla .= '
                         <tr class="text-center">
-                            <td>'.$contador.'</td>
-                            <td>'.$rows->$nombre.'</td>
-                            <td>'.strtoupper($rows->estado).'</td>
+                            <td>' . $contador . '</td>
+                            <td>' . $rows->$nombre . '</td>
+                            <td>' . strtoupper($rows->estado) . '</td>
                             <td class="d-flex justify-content-center gap-2">
                                 <!-- Editar -->
-                                <a href="'.APP_URL.'?view=categoria_gasto_update&categoria_id_up='.$rows['id_categoria_gasto'].'" class="btn btn-success btn-sm">
+                                <button id="btnOpenEditar" type="button" class="btn btn-success btn-sm btnOpenEditar" data-bs-toggle="modal" data-bs-target="#modalCategoria" data-id="' . $rows->$id . '" data-nombre="' . $rows->$nombre . '" data-estado="' . $rows->estado . '">
                                     Editar
-                                </a>
+                                </button>
+
                                 <!-- Eliminar -->
-                                <form class="FormularioAjax" action="'.APP_URL.'app/ajax/FuntionAjax.php" method="POST">
+                                <form class="FormularioAjax" action="' . APP_URL . 'app/ajax/FuntionAjax.php" method="POST">
                                     <input type="hidden" name="modulo_categoria" value="eliminar">
-                                    <input type="hidden" name="usuario_id" value="'.$rows['id_usuario'].'">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        Eliminar
+                                    <input type="hidden" name="usuario_id" value="' . $rows['id_usuario'] . '">
+                                    <button type="submit" class="btn ' . $btn_apagar_class . ' btn-sm">
+                                        <i class="bi bi-power"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
                     ';
-                    $contador++;
-                }
-                $pag_final=$contador-1;
-            }else{
-                if($consulta_total){
-                    $tabla.='
+                $contador++;
+            }
+            $pag_final = $contador - 1;
+        } else {
+            if ($consulta_total) {
+                $tabla .= '
                         <tr class="text-center">
                             <td colspan="4">
-                                <a href="'.$url.'1/"
+                                <a href="' . $url . '1/"
                                 class="btn btn-info text-white rounded-pill btn-sm mt-3 mb-3">
                                     Haga clic acá para recargar el listado
                                 </a>
                             </td>
                         </tr>
                     ';
-                }else{
-                    $tabla.='
+            } else {
+                $tabla .= '
                         <tr class="text-center">
                             <td colspan="4">
                                 No hay registros en el sistema
                             </td>
                         </tr>
                     ';
-                }
             }
-            $tabla .= '
+        }
+        $tabla .= '
                         </tbody>
                     </table>
                 </div>
             ';
-            if($consulta_total && $pagina<=$numeroPaginas){
-                $tabla.='<p class="text-secondary text-centermb-4">Mostrando usuarios <strong>'.$pag_inicio.'</strong> al <strong>'.$pag_final.'</strong> de un <strong>total de '.$consulta_total.'</strong></p>';
-                $tabla.=$this->paginadorTablas($pagina,$numeroPaginas,$url,7);
-            }
-            return $tabla;
-            
+        if ($consulta_total && $pagina <= $numeroPaginas) {
+            $tabla .= '<p class="text-secondary text-center mb-3">Mostrando categoria <strong>' . $pag_inicio . '</strong> al <strong>' . $pag_final . '</strong> de un <strong>total de ' . $consulta_total . '</strong></p>';
+            $tabla .= $this->paginadorTablas($pagina, $numeroPaginas, $url, 7);
         }
+        return $tabla;
     }
+
+    public function actualizarCategoriaControlador(){
+        //codigo para actualizar categoria
+    }
+    public function eliminarCategoriaControlador(){
+        //codigo para eliminar categoria
+    }
+}
