@@ -49,8 +49,6 @@
                         id="btnOpenRegistrar">
                     Registrar Categoría
                 </button>
-
-
             </form>
         </div>
     </div>

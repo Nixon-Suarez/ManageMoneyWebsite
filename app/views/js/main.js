@@ -28,7 +28,7 @@ document.addEventListener("click", function(e) {
     }
 
     // ---- MODO EDITAR ----
-    if (e.target.id === "btnOpenEditar") {
+    if (e.target.classList.contains("btnOpenEditar")) {
 
         document.getElementById("modalCategoriaLabel").textContent = "Editar Categoría";
         document.getElementById("btnSubmitCategoria").textContent = "Actualizar";

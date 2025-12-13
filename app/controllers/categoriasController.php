@@ -7,8 +7,10 @@ use App\Models\CategoriaGasto;
 use App\Models\CategoriaIngreso;
 
 
-class categoriasController extends mainModel{
-    public function crearCategoriaControlador(){
+class categoriasController extends mainModel
+{
+    public function crearCategoriaControlador()
+    {
         #Almacenar Datos
         $nombre_categoria = $this->limpiarCadena($_POST['nombre_categoria']);
         $tipo_categoria = $this->limpiarCadena($_POST['tipo_categoria']);
@@ -86,7 +88,8 @@ class categoriasController extends mainModel{
         }
         return json_encode($alerta);
     }
-    public function listarCategoriaControlador($pagina, $registros, $url, $busqueda, $tipo_categoria){
+    public function listarCategoriaControlador($pagina, $registros, $url, $busqueda, $tipo_categoria)
+    {
         $pagina = $this->limpiarCadena($pagina);
         $registros = $this->limpiarCadena($registros);
         $busqueda = $this->limpiarCadena($busqueda);
@@ -165,14 +168,15 @@ class categoriasController extends mainModel{
                             <td>' . strtoupper($rows->estado) . '</td>
                             <td class="d-flex justify-content-center gap-2">
                                 <!-- Editar -->
-                                <button id="btnOpenEditar" type="button" class="btn btn-success btn-sm btnOpenEditar" data-bs-toggle="modal" data-bs-target="#modalCategoria" data-id="' . $rows->$id . '" data-nombre="' . $rows->$nombre . '" data-estado="' . $rows->estado . '">
+                                <button type="button" class="btn btn-success btn-sm btnOpenEditar" data-bs-toggle="modal" data-bs-target="#modalCategoria" data-id="' . $rows->$id . '" data-nombre="' . $rows->$nombre . '" data-estado="' . $rows->estado . '">
                                     Editar
                                 </button>
 
                                 <!-- Eliminar -->
-                                <form class="FormularioAjax" action="' . APP_URL . 'app/ajax/FuntionAjax.php" method="POST">
-                                    <input type="hidden" name="modulo_categoria" value="eliminar">
-                                    <input type="hidden" name="usuario_id" value="' . $rows['id_usuario'] . '">
+                                <form class="FormularioAjax" action="' . APP_URL . 'app/ajax/FunctionAjax.php" method="POST">
+                                    <input type="hidden" name="modulo_categoria" value="eliminar_categoria">
+                                    <input type="hidden" name="categoria_id" value="' . $rows->$id . '">
+                                    <input type="hidden" name="tipo_categoria" value="' . $tipo_categoria . '">
                                     <button type="submit" class="btn ' . $btn_apagar_class . ' btn-sm">
                                         <i class="bi bi-power"></i>
                                     </button>
@@ -217,10 +221,155 @@ class categoriasController extends mainModel{
         return $tabla;
     }
 
-    public function actualizarCategoriaControlador(){
-        //codigo para actualizar categoria
+    public function actualizarCategoriaControlador()
+    {
+        #Almacenar Datos para la validacion de la categoria
+        $tipo_categoria = $this->limpiarCadena($_POST['tipo_categoria']);
+        $id = $this->limpiarCadena($_POST['categoria_id']);
+        // verificar que la categoria exista
+        if ($tipo_categoria == "gasto") {
+            $nombre = 'nombre_categoria_gasto';
+            $modelo = CategoriaGasto::class;
+            $categoria_id = 'id_categoria_gasto';
+        } else if ($tipo_categoria == "ingreso") {
+            $nombre = 'nombre_categoria_ingreso';
+            $modelo = CategoriaIngreso::class;
+            $categoria_id = 'id_categoria_ingreso';
+        } else {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El tipo de categoría no es válido",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        $categoria_exist = $modelo::where($categoria_id, $id)
+            ->where("id_usuario", $_SESSION['id'])
+            ->first();
+        if (!$categoria_exist) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El tipo de categoría no existe",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        #Almacenar Datos para la actualizacion de la categoria
+        $estado_categoria = $this->limpiarCadena($_POST['estado_categoria']);
+        $nombre_categoria = $this->limpiarCadena($_POST['nombre_categoria']);
+        // verificar campos obligatorios
+        if ($nombre_categoria == "" || $tipo_categoria == "" || $estado_categoria == "" || $id == "") {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "No has llenado todos los campos que son obligatorios",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        #Verificando integridad de los datos
+        if ($this->verificarDatos("^[a-zA-Z0-9]{4,20}$", $nombre_categoria)) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El nombre de la categoría no coincide con el formato solicitado",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        // verificar que el nombre sea unico segun el tipo
+        $check_nombre = $modelo::where($nombre, $nombre_categoria)
+            ->where("id_usuario", $_SESSION['id'])
+            ->where($categoria_id, '!=', $id)
+            ->first();
+        if ($check_nombre) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El nombre de la categoría ya se encuentra registrado",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        // Preparando datos para el registro
+        $datos_categoria_reg = [
+            $nombre => $nombre_categoria,
+            "id_usuario" => $_SESSION['id'],
+            "estado" => $estado_categoria
+        ];
+        $nueva_categoria = $modelo::where($categoria_id, $id)
+            ->update($datos_categoria_reg);
+        if ($nueva_categoria) {
+            $alerta = [
+                "tipo" => "recargar",
+                "titulo" => "Usuario registrado",
+                "texto" => "La categoria " . $nombre_categoria . " ha sido actualizada exitosamente",
+                "icono" => "success"
+            ];
+        } else {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "No se pudo actualizar la categoría",
+                "icono" => "error"
+            ];
+        }
+        return json_encode($alerta);
     }
-    public function eliminarCategoriaControlador(){
-        //codigo para eliminar categoria
+    public function CambioEstadoCategoriaControlador()
+    {
+        #Almacenar Datos
+        $tipo_categoria = $this->limpiarCadena($_POST['tipo_categoria']);
+        $id = $this->limpiarCadena($_POST['categoria_id']);
+        // verificar que la categoria exista
+        if ($tipo_categoria == "gasto") {
+            $modelo = CategoriaGasto::class;
+            $categoria_id = 'id_categoria_gasto';
+        } else if ($tipo_categoria == "ingreso") {
+            $modelo = CategoriaIngreso::class;
+            $categoria_id = 'id_categoria_ingreso';
+        } else {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El tipo de categoría no es válido",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        $categoria_exist = $modelo::where($categoria_id, $id)
+            ->where("id_usuario", $_SESSION['id'])
+            ->first();
+        if (!$categoria_exist) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El tipo de categoría no existe",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        // Cambiar estado
+        $nuevo_estado = ($categoria_exist->estado == "activo") ? "inactivo" : "activo";
+        $cambio_estado = $modelo::where($categoria_id, $id)
+            ->update(["estado" => $nuevo_estado]);
+        if ($cambio_estado) {
+            $alerta = [
+                "tipo" => "recargar",
+                "titulo" => "Cambio de estado exitoso",
+                "texto" => "El estado de la categoría ha sido cambiado a " . $nuevo_estado . " exitosamente",
+                "icono" => "success"
+            ];
+        } else {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "No se pudo cambiar el estado de la categoría",
+                "icono" => "error"
+            ];
+        }
+        return json_encode($alerta);
     }
 }

@@ -22,6 +22,9 @@ if (isset($_SESSION['id']) && $_SESSION['id'] != "") {
         if ($_POST['modulo_categoria'] == "actualizar_categoria") {
             echo $insCategorias->actualizarCategoriaControlador();
         }
+        if ($_POST['modulo_categoria'] == "eliminar_categoria") {
+            echo $insCategorias->CambioEstadoCategoriaControlador();
+        }
     }
     if (isset($_POST['modulo_buscador'])) {
         $insBuscador = new searchController();
