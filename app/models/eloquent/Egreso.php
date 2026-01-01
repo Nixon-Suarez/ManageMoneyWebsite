@@ -17,7 +17,9 @@ class Egreso extends Model
         'id_mes',
         'id_usuario',
         'id_categoria_gasto',
-        'egresoAdjunto'
+        'egresoAdjunto',
+        'estadoEgreso',
+        'año'
     ];
 
     protected $casts = [
@@ -26,7 +28,9 @@ class Egreso extends Model
         'id_mes' => 'integer',
         'id_usuario' => 'integer',
         'id_categoria_gasto' => 'integer',
-        'egresoAdjunto' => 'string'
+        'egresoAdjunto' => 'string',
+        'estadoEgreso' => 'integer',
+        'año' => 'string'
     ];
 
     // Relaciones

@@ -17,7 +17,9 @@ class Ingreso extends Model
         'id_mes',
         'id_usuario',
         'id_categoria_ingreso',
-        'ingresoAdjunto'
+        'ingresoAdjunto',
+        'estadoIngreso',
+        'año'
     ];
 
     protected $casts = [
@@ -26,7 +28,9 @@ class Ingreso extends Model
         'id_mes' => 'integer',
         'id_usuario' => 'integer',
         'id_categoria_ingreso' => 'integer',
-        'ingresoAdjunto' => 'string'
+        'ingresoAdjunto' => 'string',
+        'estadoIngreso' => 'integer',
+        'año' => 'string'
     ];
 
     // Relaciones

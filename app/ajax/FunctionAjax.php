@@ -29,7 +29,9 @@ if (isset($_SESSION['id']) && $_SESSION['id'] != "") {
     if (isset($_POST['modulo_buscador'])) {
         $insBuscador = new searchController();
         if ($_POST['modulo_buscador'] == "buscar_categoria")
-            echo $insBuscador->buscarDatosControlador();
+            echo $insBuscador->buscarDatosControlador("categoria");
+        if ($_POST['modulo_buscador'] == "buscar_gasto")
+            echo $insBuscador->buscarDatosControlador("gasto");
     }
 } else {
     session_destroy();

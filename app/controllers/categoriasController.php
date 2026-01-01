@@ -118,24 +118,19 @@ class categoriasController extends mainModel
                     });
                 </script>";
         }
+        // consulta
+        $query = $modelo::where('id_usuario', $_SESSION['id']);
+        // Filtro por búsqueda
         if (!empty($busqueda)) {
-            $consulta_datos = $modelo::where($nombre, 'LIKE', "%$busqueda%")
-                ->where('id_usuario', $_SESSION['id'])
-                ->orderBy($id, 'DESC')
-                ->skip($inicio)
-                ->take($registros)
-                ->get();
-            $consulta_total = $modelo::where($nombre, 'LIKE', "%$busqueda%")
-                ->where('id_usuario', $_SESSION['id'])
-                ->count();
-        } else {
-            $consulta_datos = $modelo::orderBy($id, 'DESC')
-                ->where('id_usuario', $_SESSION['id'])
-                ->skip($inicio)
-                ->take($registros)
-                ->get();
-            $consulta_total =  $modelo::where('id_usuario', $_SESSION['id'])->count();
+            $query->where($nombre, 'LIKE', "%$busqueda%");
         }
+        $consulta_total = (clone $query)->count();
+
+        $consulta_datos = $query->orderBy($id, 'DESC')
+            ->skip($inicio)
+            ->take($registros)
+            ->get();
+
         $numeroPaginas = ceil($consulta_total / $registros);
         $tabla = ' 
                 <br>
@@ -371,5 +366,18 @@ class categoriasController extends mainModel
             ];
         }
         return json_encode($alerta);
+    }
+    public function getCategorias($tipo){
+        if($tipo == 'gasto'){
+            $modelo = CategoriaGasto::class;
+        }else if($tipo == 'ingreso'){
+            $modelo = CategoriaIngreso::class;
+        }else{
+            return [];
+        }
+        $check_categoria = $modelo::where('id_usuario', $_SESSION['id'])
+            ->where('estado', 'activo')
+            ->get();
+        return $check_categoria;
     }
 }

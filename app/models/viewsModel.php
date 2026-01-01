@@ -5,9 +5,11 @@
             $listaBlanca = [
                 "dashboard",
                 "logout",   
-                "categorias"
+                "categorias",
+                "gastos",
+                "gastosNew",
+                "ingresos"
             ];
-
             if(in_array($vistas, $listaBlanca)) {
                 if (is_file("./app/views/content/{$vistas}_view.php")) {
                     $contenido = "./app/views/content/{$vistas}_view.php";
