@@ -16,7 +16,7 @@
                         <label for="nombre_categoria" class="form-label">Nombre Categoria</label>
                         <label for="nombre_categoria" class="form-label asterisco-obligatorio">*</label>
                         <input type="text" class="form-control"
-                            id="nombre_categoria" name="nombre_categoria"
+                            id="nombre_categoria" name="nombre_categoria" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{3,40}"
                             required>
                     </div>
                     <div class="mb-3">

@@ -97,6 +97,33 @@ function alertas_ajax(alerta){
                 window.location.href = alerta.url; // redirecciona a la url que se le pasa
             }
         });
+    // }else if(alerta.tipo=="confirmar"){
+    //     Swal.fire({
+    //         icon: alerta.icono,
+    //         title: alerta.titulo,
+    //         text: alerta.texto,
+    //         theme: "light",
+    //         showCancelButton: true,
+    //         confirmButtonColor: "#3085d6",
+    //         cancelButtonColor: "#d33",
+    //         confirmButtonText: "Sí, continuar",
+    //         cancelButtonText: "Cancelar"
+    //     }).then((result) => {
+    //         if(result.isConfirmed){
+
+    //             // reenviar el formulario con confirmación
+    //             let formulario = document.querySelector(".FormularioAjax");
+    //             let data = new FormData(formulario);
+    //             data.append("confirmar", "true"); // bandera clave
+
+    //             fetch(formulario.getAttribute("action"), {
+    //                 method: formulario.getAttribute("method"),
+    //                 body: data
+    //             })
+    //             .then(res => res.json())
+    //             .then(res => alertas_ajax(res));
+    //         }
+    //     });
     }
 }
 

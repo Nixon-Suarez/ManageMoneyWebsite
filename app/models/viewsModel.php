@@ -7,7 +7,6 @@
                 "logout",   
                 "categorias",
                 "gastos",
-                "gastosNew",
                 "ingresos"
             ];
             if(in_array($vistas, $listaBlanca)) {

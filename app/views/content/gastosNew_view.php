@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form class="FormularioAjax" action="<?php echo APP_URL?>app/ajax/FunctionAjax.php" method="POST" autocomplete="off">
+                <form class="FormularioAjax" action="<?php echo APP_URL ?>app/ajax/FunctionAjax.php" method="POST" autocomplete="off">
                     <input type="hidden" name="modulo_gastos" id="modulo_gastos" value="registrar_gastos">
                     <!-- ID para edición -->
                     <input type="hidden" name="gastos_id" id="gastos_id">
@@ -20,10 +20,10 @@
                     </div>
                     <!-- valor -->
                     <div class="mb-3">
-                        <label for="valor_gastos" class="form-label">Descripcion Gasto</label>
+                        <label for="valor_gastos" class="form-label">Valor gasto</label>
                         <label for="valor_gastos" class="form-label asterisco-obligatorio">*</label>
                         <input type="number" class="form-control"
-                            id="valor_gastos" name="valor_gastos" required>
+                            id="valor_gastos" name="valor_gastos" pattern="[0-9]{3,100}" required>
                         </input>
                     </div>
                     <!-- mes -->
@@ -31,6 +31,7 @@
                         <label for="mes_gastos" class="form-label">Mes</label>
                         <label for="mes_gastos" class="form-label asterisco-obligatorio">*</label>
                         <select id="mes_gastos" name="mes_gastos" class="form-control" required>
+                            <option value="" selected disabled>seleccionar</option>
                             <option value="1">Enero</option>
                             <option value="2">Febrero</option>
                             <option value="3">Marzo</option>
@@ -50,38 +51,52 @@
                         <label for="anio_gastos" class="form-label">Año</label>
                         <label for="anio_gastos" class="form-label asterisco-obligatorio">*</label>
                         <input type="number" class="form-control"
-                            id="anio_gastos" name="anio_gastos" required>
+                            id="anio_gastos" name="anio_gastos" pattern="[0-9]{3,40}" required>
                         </input>
-                    <!-- Estado -->
-                    <div class="mb-3">
-                        <label class="form-label">Estado</label>
-                        <select id="estado_categoria" name="estado_categoria" class="form-control" required>
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                        </select>
-                    </div>
-                    <!-- categoria -->
-                    <div class="mb-3">
-                        <label for="categoria_gastos" class="form-label">Categoria Gasto</label>
-                        <label for="categoria_gastos" class="form-label asterisco-obligatorio">*</label>
-                        <select id="categoria_gastos" name="categoria_gastos" class="form-control" required>
-                            <option value="seleccionar" selected disabled>seleccionar</option>
-                            <?php
+                        <!-- Estado -->
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <select id="estado_gastos" name="estado_gastos" class="form-control" required>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                        <!-- categoria -->
+                        <div class="mb-3">
+                            <label for="categoria_gastos" class="form-label">Categoria Gasto</label>
+                            <label for="categoria_gastos" class="form-label asterisco-obligatorio">*</label>
+                            <select id="categoria_gastos" name="categoria_gastos" class="form-control" required>
+                                <option value="" selected disabled>seleccionar</option>
+                                <?php
+
                                 use app\controllers\categoriasController;
+
                                 $insCategorias = new categoriasController();
                                 $datos = $insCategorias->getCategorias('gasto');
-                                foreach($datos as $categoria) {
-                                    echo '<option value="'.$categoria['id_categoria_gasto'].'">'.$categoria['nombre_categoria_gasto'].'</option>';
+                                foreach ($datos as $categoria) {
+                                    echo '<option value="' . $categoria['id_categoria_gasto'] . '">' . $categoria['nombre_categoria_gasto'] . '</option>';
                                 }
-                            ?>
-                        </select>
+                                ?>
+                            </select>
+                        </div>
+                        <!-- Documento -->
+                        <div class="mb-3 text-center">
+                            <label for="gasto_documento" class="form-label">Seleccione un archivo</label>
+                            <input
+                                class="form-control"
+                                type="file"
+                                id="gasto_documento"
+                                name="gasto_documento"
+                                accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                            <div class="form-text">JPG, JPEG, PNG, PDF, DOC. (MAX 10MB)</div>
+                        </div>
 
-                    <!-- Boton (Registrar/Actualizar) -->
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-custom" id="btnSubmitCategoria">
-                            Registrar
-                        </button>
-                    </div>
+                        <!-- Boton (Registrar/Actualizar) -->
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-custom" id="btnSubmitGastos">
+                                Registrar
+                            </button>
+                        </div>
                 </form>
             </div>
         </div>

@@ -16,9 +16,9 @@ class Ingreso extends Model
         'fecha_actualizacion',
         'id_mes',
         'id_usuario',
-        'id_categoria_ingreso',
+        'categoria_ing',
         'ingresoAdjunto',
-        'estadoIngreso',
+        'ingresoEstado',
         'año'
     ];
 
@@ -27,9 +27,9 @@ class Ingreso extends Model
         'fecha_actualizacion' => 'date',
         'id_mes' => 'integer',
         'id_usuario' => 'integer',
-        'id_categoria_ingreso' => 'integer',
+        'categoria_ing' => 'integer',
         'ingresoAdjunto' => 'string',
-        'estadoIngreso' => 'integer',
+        'ingresoEstado' => 'string',
         'año' => 'string'
     ];
 

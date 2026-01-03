@@ -16,9 +16,9 @@ class Egreso extends Model
         'fecha_actualizacion',
         'id_mes',
         'id_usuario',
-        'id_categoria_gasto',
+        'categoria_eg',
         'egresoAdjunto',
-        'estadoEgreso',
+        'EgresoEstado',
         'año'
     ];
 
@@ -27,10 +27,10 @@ class Egreso extends Model
         'fecha_actualizacion' => 'date',
         'id_mes' => 'integer',
         'id_usuario' => 'integer',
-        'id_categoria_gasto' => 'integer',
+        'categoria_eg' => 'integer',
         'egresoAdjunto' => 'string',
-        'estadoEgreso' => 'integer',
-        'año' => 'string'
+        'EgresoEstado' => 'string',
+        'año' => 'string',
     ];
 
     // Relaciones
@@ -47,7 +47,7 @@ class Egreso extends Model
     // NUEVA RELACIÓN
     public function categoriaGasto()
     {
-        return $this->belongsTo(CategoriaGasto::class, 'id_categoria_gasto', 'id_categoria_gasto');
+        return $this->belongsTo(CategoriaGasto::class, 'categoria_eg', 'categoria_eg');
     }
 
     // Alias para mayor claridad
@@ -69,7 +69,7 @@ class Egreso extends Model
 
     public function scopePorCategoria($query, $idCategoria)
     {
-        return $query->where('id_categoria_gasto', $idCategoria);
+        return $query->where('categoria_eg', $idCategoria);
     }
 
     public function scopeDelMesActual($query)
@@ -80,7 +80,7 @@ class Egreso extends Model
 
     public function scopeSinCategoria($query)
     {
-        return $query->whereNull('id_categoria_gasto');
+        return $query->whereNull('categoria_eg');
     }
 
     // Métodos útiles
@@ -97,7 +97,7 @@ class Egreso extends Model
 
     public static function totalPorCategoria($idCategoria, $idMes = null)
     {
-        $query = self::where('id_categoria_gasto', $idCategoria);
+        $query = self::where('categoria_eg', $idCategoria);
         
         if ($idMes) {
             $query->where('id_mes', $idMes);
@@ -116,7 +116,7 @@ class Egreso extends Model
         }
         
         return $query->get()
-                     ->groupBy('id_categoria_gasto')
+                     ->groupBy('categoria_eg')
                      ->map(function ($egresos) {
                          return [
                              'categoria' => $egresos->first()->categoriaGasto->nombre_categoria_gasto ?? 'Sin categoría',

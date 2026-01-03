@@ -12,9 +12,9 @@ class categoriasController extends mainModel
     public function crearCategoriaControlador()
     {
         #Almacenar Datos
-        $nombre_categoria = $this->limpiarCadena($_POST['nombre_categoria']);
-        $tipo_categoria = $this->limpiarCadena($_POST['tipo_categoria']);
-        $estado_categoria = $this->limpiarCadena($_POST['estado_categoria']);
+        $nombre_categoria = isset($_POST['nombre_categoria']) ? $this->limpiarCadena($_POST['nombre_categoria']) : "";
+        $tipo_categoria = isset($_POST['tipo_categoria']) ? $this->limpiarCadena($_POST['tipo_categoria']) : "";
+        $estado_categoria = isset($_POST['estado_categoria']) ? $this->limpiarCadena($_POST['estado_categoria']) : "";
         // verificar campos obligatorios
         if ($nombre_categoria == "" || $tipo_categoria == "" || $estado_categoria == "") {
             $alerta = [
@@ -25,7 +25,15 @@ class categoriasController extends mainModel
             ];
             return json_encode($alerta);
         }
-
+        if($estado_categoria != "activo" && $estado_categoria != "inactivo"){
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El estado de la categoría no coincide con el formato solicitado",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
         #Verificando integridad de los datos
         if ($this->verificarDatos("^[a-zA-Z0-9]{4,20}$", $nombre_categoria)) {
             $alerta = [
@@ -70,19 +78,28 @@ class categoriasController extends mainModel
             "id_usuario" => $_SESSION['id'],
             "estado" => $estado_categoria
         ];
-        $nueva_categoria = $modelo::create($datos_categoria_reg);
-        if ($nueva_categoria) {
-            $alerta = [
-                "tipo" => "recargar",
-                "titulo" => "Usuario registrado",
-                "texto" => "La categoria " . $nombre_categoria . " ha sido registrada exitosamente",
-                "icono" => "success"
-            ];
-        } else {
+        try{
+            $nueva_categoria = $modelo::create($datos_categoria_reg);
+            if ($nueva_categoria) {
+                $alerta = [
+                    "tipo" => "recargar",
+                    "titulo" => "Usuario registrado",
+                    "texto" => "La categoria " . $nombre_categoria . " ha sido registrada exitosamente",
+                    "icono" => "success"
+                ];
+            } else {
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrio un error inesperado",
+                    "texto" => "No se pudo registrar la categoría",
+                    "icono" => "error"
+                ];
+            }
+        }catch (\Exception $e){
             $alerta = [
                 "tipo" => "simple",
-                "titulo" => "Ocurrio un error inesperado",
-                "texto" => "No se pudo registrar la categoría",
+                "titulo" => "Error de base de datos",
+                "texto" => "Error: " . $e->getMessage(),
                 "icono" => "error"
             ];
         }
