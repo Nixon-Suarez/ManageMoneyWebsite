@@ -36,11 +36,20 @@
                 </li>
                 <!-- categorias -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="usuariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoriaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Categorias
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="usuariosDropdown">
+                    <ul class="dropdown-menu" aria-labelledby="categoriaDropdown">
                         <li><a class="dropdown-item" href="<?php echo APP_URL; ?>?view=categorias/">categorias</a></li>
+                    </ul>
+                </li>
+                <!-- gastos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="gatsoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Gastos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="gatsoDropdown">
+                        <li><a class="dropdown-item" href="<?php echo APP_URL; ?>?view=gastos/">gastos</a></li>
                     </ul>
                 </li>
             </ul>

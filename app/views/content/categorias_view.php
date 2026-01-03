@@ -13,6 +13,11 @@
                 <input type="hidden" name="modulo_buscador" value="buscar_categoria">
                 <input type="hidden" name="modulo_url" value="<?php echo $url[0]; ?>">
 
+                <?php 
+                    $current_tipo = isset($_SESSION[$url[0]]['tipo_categoria']) ? $_SESSION[$url[0]]['tipo_categoria'] : 'ingreso';
+                    $current_text = isset($_SESSION[$url[0]]['texto']) ? $_SESSION[$url[0]]['texto'] : '';
+                ?>
+
                 <!-- Nombre -->
                 <div class="col-md-5">
                     <label for="txt_buscador" class="form-label">Nombre Categoria</label>
@@ -20,15 +25,13 @@
                            class="form-control rounded-pill"
                            placeholder="¿Qué estás buscando?"
                            pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]{1,30}"
-                           maxlength="30">
+                           maxlength="30"
+                           value="<?php echo $current_text; ?>">
                 </div>
 
                 <!-- Tipo -->
                 <div class="col-md-5">
                     <label for="tipo_categoria" class="form-label">Tipo</label>
-                    <?php 
-                        $current_tipo = isset($_SESSION[$url[0]]['tipo_categoria']) ? $_SESSION[$url[0]]['tipo_categoria'] : 'ingreso';
-                    ?>
                     <select id="tipo_categoria" name="tipo_categoria" class="form-control rounded-pill" required>
                         <option value="ingreso" <?php echo ($current_tipo === 'ingreso') ? 'selected' : ''; ?>>Ingreso</option>
                         <option value="gasto"   <?php echo ($current_tipo === 'gasto') ? 'selected' : ''; ?>>Gasto</option>
@@ -57,8 +60,7 @@
             use app\controllers\categoriasController;
             $insCategorias = new categoriasController();
             $pagina = isset($url[1]) ? $url[1] : 1;
-            $filtro = isset($_SESSION[$url[0]]['texto']) ? $_SESSION[$url[0]]['texto'] : "";
-            echo $insCategorias->listarCategoriaControlador($pagina, 10, $url[0], $filtro, $current_tipo);
+            echo $insCategorias->listarCategoriaControlador($pagina, 10, $url[0], $current_text, $current_tipo);
         ?>
     </div>
     <?php

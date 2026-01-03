@@ -20,6 +20,11 @@
                 <input type="hidden" name="modulo_buscador" value="buscar_gasto">
                 <input type="hidden" name="modulo_url" value="<?php echo $url[0]; ?>">
 
+                <?php 
+                        $current_mes = isset($_SESSION[$url[0]]['mes']) ? $_SESSION[$url[0]]['mes'] : '';
+                        $current_text = isset($_SESSION[$url[0]]['texto']) ? $_SESSION[$url[0]]['texto'] : '';
+                        $selected = $current_mes == '' ? 'selected disabled' : '';
+                ?>
                 <!-- descripcion -->
                 <div class="col-md-5">
                     <label for="txt_buscador" class="form-label">Descripcion</label>
@@ -27,18 +32,24 @@
                            class="form-control rounded-pill"
                            placeholder="¿Qué estás buscando?"
                            pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]{1,30}"
-                           maxlength="30">
+                           maxlength="30"
+                           value="<?php echo $current_text; ?>">
                 </div>
 
                 <!-- mes -->
                 <div class="col-md-5">
                     <label for="mes" class="form-label">Mes</label>
-                    <select id="mes" name="mes" class="form-control rounded-pill" required>
-                        <option value="all" selected>Todos los meses</option>
-                        <?php 
+                    <select id="mes" name="mes" class="form-control rounded-pill">
+                        
+                        <?php
                             use app\controllers\gastoController;
                             $insGasto = new gastoController();
-                            echo $insGasto->opcionesMesesGastoControlador();
+                            echo '<option value="" '.$selected.'>Todos los meses</option>';
+                            $meses = $insGasto->opcionesMesesGastoControlador();
+                            foreach ($meses as $mes) {
+                                $isSelected = ($mes->id_mes == $current_mes) ? 'selected' : '';
+                                echo '<option value="' . $mes->id_mes . '"'.$isSelected.'>' . $mes->nombre_mes . '</option>';
+                            }
                         ?>
                     </select>   
                 </div>
@@ -62,9 +73,7 @@
     <div>
         <?php 
             $pagina = isset($url[1]) ? $url[1] : 1;
-            $filtro = isset($_SESSION[$url[0]]['texto']) ? $_SESSION[$url[0]]['texto'] : "";
-            $mes = isset($_SESSION[$url[0]]['mes']) ? $_SESSION[$url[0]]['mes'] : 'all';
-            echo $insGasto->listarGastoControlador($pagina, 10, $url[0], $filtro, $mes);
+            echo $insGasto->listarGastoControlador($pagina, 10, $url[0], $current_text, $current_mes);
         ?>
     </div>
     <?php

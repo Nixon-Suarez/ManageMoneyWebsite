@@ -64,16 +64,7 @@
                 ];
                 return json_encode($alerta);
             }else if($tipo_busqueda == "gasto"){
-                $mes = $this->limpiarCadena($_POST['mes']);
-                if($mes= ""){
-                    $alerta = [
-                        "tipo" => "simple",
-                        "titulo" => "Ocurrio un error inesperado",
-                        "texto" => "Ingrese un termino de busqueda",
-                        "icono" => "error"
-                    ];
-                    return json_encode($alerta);
-                }
+                $mes = isset($_POST['mes']) ? $this->limpiarCadena($_POST['mes']) : "";
                 $_SESSION[$url] = [
                     "texto" => $texto,
                     "mes" => $mes
@@ -93,7 +84,7 @@
                         "texto" => "tipo de busqueda no admitido",
                         "icono" => "error"
                     ];
-                    return json_encode($alerta);
+                return json_encode($alerta);
             }
         }
     }

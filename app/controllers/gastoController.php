@@ -13,9 +13,9 @@ class gastoController extends mainModel
     {
         $pagina = $this->limpiarCadena($pagina);
         $registros = $this->limpiarCadena($registros);
-        $busqueda = $this->limpiarCadena($busqueda);
+        $busqueda = isset($busqueda) ? $this->limpiarCadena($busqueda) : "";
         $url = $this->limpiarCadena($url);
-        $mes = $this->limpiarCadena($mes);
+        $mes = isset($mes) ? $this->limpiarCadena($mes) : "";
         $url = APP_URL . "?view=" . $url . "/";
         $pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;
         $inicio = ($pagina > 0) ? (($registros * $pagina) - $registros) : 0;
@@ -24,12 +24,12 @@ class gastoController extends mainModel
         $query = Egreso::where('id_usuario', $_SESSION['id']);
 
         // Filtro por mes
-        if ($mes !== 'all') {
+        if ($mes !== '' && !empty($mes)) {
             $query->where('id_mes', $mes);
         }
 
         // Filtro por búsqueda
-        if (!empty($busqueda)) {
+        if (!empty($busqueda) && $busqueda != "") {
             $query->where('descripcion', 'LIKE', "%{$busqueda}%");
         }
 
@@ -362,10 +362,6 @@ class gastoController extends mainModel
             ->pluck('id_mes'); // Obtiene solo los id_mes
         $meses = Mes::whereIn('id_mes', $mes_ids)
             ->get();
-        $opciones = '';
-        foreach ($meses as $mes) {
-            $opciones .= '<option value="' . $mes->id_mes . '">' . $mes->nombre_mes . '</option>';
-        }
-        return $opciones;
+        return $meses;
     }
 }
