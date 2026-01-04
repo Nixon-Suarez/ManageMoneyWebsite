@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalGastosLabel">Gastos</h5>
+                <h5 class="modal-title" id="modalGastosLabel">Registrar Gastos</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -80,6 +80,9 @@
                             </select>
                         </div>
                         <!-- Documento -->
+                        <a id="descargar_gasto" href="" hidden download class="btn btn-success">
+                            <i class="bi bi-download"></i> Descargar
+                        </a>
                         <div class="mb-3 text-center">
                             <label for="gasto_documento" class="form-label">Seleccione un archivo</label>
                             <input

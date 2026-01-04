@@ -180,7 +180,12 @@ class categoriasController extends mainModel
                             <td>' . strtoupper($rows->estado) . '</td>
                             <td class="d-flex justify-content-center gap-2">
                                 <!-- Editar -->
-                                <button type="button" class="btn btn-success btn-sm btnOpenEditar" data-bs-toggle="modal" data-bs-target="#modalCategoria" data-id="' . $rows->$id . '" data-nombre="' . $rows->$nombre . '" data-estado="' . $rows->estado . '">
+                                <button type="button" 
+                                    class="btn btn-success btn-sm btnOpenEditar" 
+                                    data-bs-toggle="modal" data-bs-target="#modalCategoria" 
+                                    data-id="' . $rows->$id . '" 
+                                    data-nombre="' . $rows->$nombre . '" 
+                                    data-estado="' . $rows->estado . '">
                                     Editar
                                 </button>
 

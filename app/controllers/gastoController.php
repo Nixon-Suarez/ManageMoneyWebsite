@@ -78,7 +78,18 @@ class gastoController extends mainModel
                                 <td>' . strtoupper($rows->EgresoEstado) . '</td>
                                 <td class="d-flex justify-content-center gap-2">
                                     <!-- Editar -->
-                                    <button type="button" class="btn btn-success btn-sm btnOpenEditar" data-bs-toggle="modal" data-bs-target="#modalGasto" data-id="' . $rows->id_egreso . '" data-descripcion="' . $rows->descripcion . '" data-estado="' . $rows->EgresoEstado . '"data-valor="' . $rows->valor_egreso . '"data-mes="' . $rows->id_mes . '"data-categoria="' . $rows->categoria_eg . '">
+                                    <button type="button" 
+                                            class="btn btn-success btn-sm btnOpenEditarGastos" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalGastos" 
+                                            data-id="' . $rows->id_egreso . '" 
+                                            data-descripcion="' . $rows->descripcion . '" 
+                                            data-estado="' . $rows->EgresoEstado . '" 
+                                            data-valor="' . $rows->valor_egreso . '" 
+                                            data-mes="' . $rows->id_mes . '" 
+                                            data-anio="' . $rows->año . '" 
+                                            data-categoria="' . $rows->categoria_eg . '" 
+                                            data-adjunto="' . APP_URL . 'app/views/img/uploads/gastos/' . $rows->egresoAdjunto . '">
                                         Editar
                                     </button>
 
@@ -215,7 +226,7 @@ class gastoController extends mainModel
         //     return json_encode($alerta);
         // }
         // Directorio de imagenes
-        $img_dir = "../views/img/loads/";
+        $img_dir = "../views/img/uploads/gastos/";
         $document_name = $_FILES['gasto_documento']['name'];
         $archivo_gasto = null;
         if ($document_name != "" && $_FILES['gasto_documento']['size'] > 0) {
@@ -314,7 +325,7 @@ class gastoController extends mainModel
             "EgresoEstado" => $estado,
             "año" => $anio
         ];
-        try{
+        try {
             $nuevo_gasto = Egreso::create($datos_gasto_reg);
             if ($nuevo_gasto) {
                 $alerta = [
@@ -324,10 +335,10 @@ class gastoController extends mainModel
                     "icono" => "success"
                 ];
             } else {
-                if(is_file($img_dir.$archivo_gasto)){ #valida si la img existe en el directorio
-                        chmod($img_dir.$archivo_gasto, 0777);
-                        unlink($img_dir.$archivo_gasto); #si existe la elimina
-                    }
+                if (is_file($img_dir . $archivo_gasto)) { #valida si la img existe en el directorio
+                    chmod($img_dir . $archivo_gasto, 0777);
+                    unlink($img_dir . $archivo_gasto); #si existe la elimina
+                }
                 $alerta = [
                     "tipo" => "simple",
                     "titulo" => "Ocurrio un error inesperado",
@@ -340,7 +351,7 @@ class gastoController extends mainModel
                 chmod($img_dir . $archivo_gasto, 0777);
                 unlink($img_dir . $archivo_gasto);
             }
-            
+
             $alerta = [
                 "tipo" => "simple",
                 "titulo" => "Error de base de datos",
@@ -353,7 +364,237 @@ class gastoController extends mainModel
 
     public function CambioEstadoGastoControlador() {}
 
-    public function actualizarGastoControlador() {}
+    public function actualizarGastoControlador()
+    {
+        #Almacenar Datos
+        $id = isset($_POST['gastos_id']) ? $this->limpiarCadena($_POST['gastos_id']) : "";
+        $descripcion = isset($_POST['descripcion_gastos']) ? $this->limpiarCadena($_POST['descripcion_gastos']) : "";
+        $valor = isset($_POST['valor_gastos']) ? $this->limpiarCadena($_POST['valor_gastos']) : "";
+        $mes = isset($_POST['mes_gastos']) ? $this->limpiarCadena($_POST['mes_gastos']) : "";
+        $anio = isset($_POST['anio_gastos']) ? $this->limpiarCadena($_POST['anio_gastos']) : "";
+        $estado = isset($_POST['estado_gastos']) ? $this->limpiarCadena($_POST['estado_gastos']) : "";
+        $categoria = isset($_POST['categoria_gastos']) ? $this->limpiarCadena($_POST['categoria_gastos']) : "";
+
+        // verificar campos obligatorios
+        if ($descripcion == "" || $valor == "" || $mes == "" || $anio == "" || $estado == "" || $categoria == "" || $id == "") {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "No has llenado todos los campos que son obligatorios",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        #Verificando integridad de los datos
+        if (!is_numeric($valor) || $valor <= 0) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El valor del gasto debe ser un número válido mayor a 0",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        $anioActual = date('Y');
+        if ($anio < 2000 || $anio > ($anioActual + 1)) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El año debe estar entre 2000 y " . ($anioActual + 1),
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        if ($mes < 1 || $mes > 12 || $this->verificarDatos("[0-9]{1,2}", $mes)) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El mes del gasto no coincide con el formato solicitado",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        if ($estado != "activo" && $estado != "inactivo") {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El estado del gasto no coincide con el formato solicitado",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        $check_categoria = CategoriaGasto::where('id_categoria_gasto', $categoria)
+            ->where('id_usuario', $_SESSION['id'])
+            ->first();
+
+        if (!$check_categoria) {
+            return json_encode([
+                "tipo" => "simple",
+                "titulo" => "Error",
+                "texto" => "La categoría seleccionada no existe",
+                "icono" => "error"
+            ]);
+        }
+        $categoriaId = $check_categoria->id_categoria_gasto;
+
+        // $check_descripcion = Egreso::where("descripcion", $descripcion)
+        //     ->where("id_usuario", $_SESSION['id'])
+        //     ->first();
+        // if ($check_descripcion && !isset($_POST['confirmar'])) {
+        //     $alerta = [
+        //         "tipo" => "confirmar",
+        //         "titulo" => "Gasto duplicado",
+        //         "texto" => "Ya existe un gasto con esta descripción. ¿Deseas registrarlo de todas formas?",
+        //         "icono" => "warning"
+        //     ];
+        //     return json_encode($alerta);
+        // }
+        // Directorio de imagenes
+        $img_dir = "../views/img/uploads/gastos/";
+        $document_name = $_FILES['gasto_documento']['name'];
+        $adjuntoBd = Egreso::where('id_egreso', $id)
+            ->where('id_usuario', $_SESSION['id'])
+            ->value('egresoAdjunto');
+        if ($document_name != "" && $_FILES['gasto_documento']['size'] > 0) {
+            //  creando directorio si no existe
+            if (!file_exists($img_dir)) {
+                if (!mkdir($img_dir, 0777)) {
+                    $alerta = [
+                        "tipo" => "simple",
+                        "titulo" => "Ocurrio un error inesperado",
+                        "texto" => "No se pudo crear el directorio",
+                        "icono" => "error"
+                    ];
+                    return json_encode($alerta);
+                }
+            }
+            // limitar que tipo de archivo esta entrando (se valida con el tipo de mime)
+            $mimePermitidos = [
+                'image/jpeg',
+                'image/png',
+                'application/pdf',
+                'application/msword', // .doc
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+            ];
+
+            $mimeArchivo = mime_content_type($_FILES['gasto_documento']['tmp_name']);
+
+            if (!in_array($mimeArchivo, $mimePermitidos)) {
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrió un error inesperado",
+                    "texto" => "Archivo no permitido, solo se permiten archivos .jpg, .jpeg, .png, .pdf, .doc, .docx",
+                    "icono" => "error"
+                ];
+                return json_encode($alerta);
+            }
+            # limitar el peso del archivo
+            if (($_FILES['gasto_documento']['size'] / 1024) > 10000) { // 10MB
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrio un error inesperado",
+                    "texto" => "El archivo no puede ser mayor a 10MB",
+                    "icono" => "error"
+                ];
+                return json_encode($alerta);
+            }
+            #Extencion del archivo
+            switch ($mimeArchivo) {
+                case 'image/jpeg':
+                    $extension = '.jpg';
+                    break;
+                case 'image/png':
+                    $extension = '.png';
+                    break;
+                case 'image/jpg':
+                    $extension = '.jpg';
+                    break;
+                case 'application/pdf':
+                    $extension = '.pdf';
+                    break;
+                case 'application/msword':
+                    $extension = '.doc';
+                    break;
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                    $extension = '.docx';
+                    break;
+                default:
+                    $extension = '.jpg';
+            }
+
+            chmod($img_dir, 0777);
+
+            // renombra la archivo_gasto
+            $nombreLimpio = str_ireplace(" ", "_", pathinfo($document_name, PATHINFO_FILENAME));
+            $archivo_gasto = $nombreLimpio . "_" . rand(1000, 9999) . "_" . time() . $extension;
+
+            // mover la img al directorio de imagenes
+            if (!move_uploaded_file($_FILES['gasto_documento']['tmp_name'], $img_dir . $archivo_gasto)) {
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrio un error inesperado",
+                    "texto" => "Error al subir el archivo, intente nuevamente",
+                    "icono" => "error"
+                ];
+                return json_encode($alerta);
+            }
+            if (is_file($img_dir . $adjuntoBd)) { #valida si la img existe en el directorio
+                chmod($img_dir . $adjuntoBd, 0777);
+                unlink($img_dir . $adjuntoBd); #si existe la elimina
+            }
+        } else {
+            $archivo_gasto = $adjuntoBd;
+        }
+        // Preparando datos para el registro
+        $datos_gasto_reg = [
+            "valor_egreso" => $valor,
+            "descripcion" => $descripcion,
+            "fecha_actualizacion" => date("Y-m-d"),
+            "id_mes" => $mes,
+            "id_usuario" => $_SESSION['id'],
+            "categoria_eg" => $categoriaId,
+            "egresoAdjunto" => $archivo_gasto,
+            "EgresoEstado" => $estado,
+            "año" => $anio
+        ];
+        try {
+            $nuevo_gasto = Egreso::where('id_egreso', $id)
+                ->where('id_usuario', $_SESSION['id'])
+                ->update($datos_gasto_reg);
+            if ($nuevo_gasto) {
+                $alerta = [
+                    "tipo" => "recargar",
+                    "titulo" => "Gasto registrado",
+                    "texto" => "El gasto " . $descripcion . " ha sido registrado exitosamente",
+                    "icono" => "success"
+                ];
+            } else {
+                if (is_file($img_dir . $archivo_gasto)) { #valida si la img existe en el directorio
+                    chmod($img_dir . $archivo_gasto, 0777);
+                    unlink($img_dir . $archivo_gasto); #si existe la elimina
+                }
+                $alerta = [
+                    "tipo" => "simple",
+                    "titulo" => "Ocurrio un error inesperado",
+                    "texto" => "No se pudo registrar el gasto, por favor intente nuevamente",
+                    "icono" => "error"
+                ];
+            }
+        } catch (\Exception $e) {
+            if (is_file($img_dir . $archivo_gasto)) {
+                chmod($img_dir . $archivo_gasto, 0777);
+                unlink($img_dir . $archivo_gasto);
+            }
+
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Error de base de datos",
+                "texto" => "Error: " . $e->getMessage(),
+                "icono" => "error"
+            ];
+        }
+        return json_encode($alerta);
+    }
 
     public function opcionesMesesGastoControlador()
     {

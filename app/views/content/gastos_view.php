@@ -64,7 +64,7 @@
                         class="btn btn-custom" 
                         data-bs-toggle="modal" 
                         data-bs-target="#modalGastos"
-                        id="btnOpenRegistrar">
+                        id="btnOpenRegistrarGastos">
                     Registrar Gasto
                 </button>
             </form>
