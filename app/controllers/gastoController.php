@@ -63,6 +63,8 @@ class gastoController extends mainModel
             $contador = $inicio + 1;
             $pag_inicio = $inicio + 1;
             foreach ($consulta_datos as $rows) {
+                $nameMes = Mes::where('id_mes', $rows->id_mes)->value('nombre_mes');
+                $categoriaName = CategoriaGasto::where('id_categoria_gasto', $rows->categoria_eg)->value('nombre_categoria_gasto');
                 if ($rows->EgresoEstado == "activo") {
                     $btn_apagar_class = 'btn-danger btn-sm';
                 } else {
@@ -73,8 +75,8 @@ class gastoController extends mainModel
                                 <td>' . $contador . '</td>
                                 <td>' . $rows->descripcion . " " . $rows->egresoAdjunto . '</td>
                                 <td>' . $rows->valor_egreso . '</td>
-                                <td>' . $rows->id_mes . '</td>
-                                <td>' . $rows->categoria_eg . '</td>
+                                <td>' . $nameMes . '</td>
+                                <td>' . $categoriaName . '</td>
                                 <td>' . strtoupper($rows->EgresoEstado) . '</td>
                                 <td class="d-flex justify-content-center gap-2">
                                     <!-- Editar -->
@@ -95,8 +97,8 @@ class gastoController extends mainModel
 
                                     <!-- Eliminar -->
                                     <form class="FormularioAjax" action="' . APP_URL . 'app/ajax/FunctionAjax.php" method="POST">
-                                        <input type="hidden" name="modulo_gasto" value="eliminar_gasto">
-                                        <input type="hidden" name="gasto_id" value="' . $rows->id_egreso . '"> 
+                                        <input type="hidden" name="modulo_gastos" value="eliminar_gastos">
+                                        <input type="hidden" name="gastos_id" value="' . $rows->id_egreso . '"> 
                                         <button type="submit" class="btn ' . $btn_apagar_class . ' btn-sm">
                                             <i class="bi bi-power"></i>
                                         </button>
@@ -207,7 +209,7 @@ class gastoController extends mainModel
             return json_encode([
                 "tipo" => "simple",
                 "titulo" => "Error",
-                "texto" => "La categoría seleccionada no existe",
+                "texto" => "El gasto seleccionada no existe",
                 "icono" => "error"
             ]);
         }
@@ -362,7 +364,42 @@ class gastoController extends mainModel
         return json_encode($alerta);
     }
 
-    public function CambioEstadoGastoControlador() {}
+    public function CambioEstadoGastoControlador() {
+        #Almacenar Datos
+        $id = isset($_POST['gastos_id']) ? $this->limpiarCadena($_POST['gastos_id']) : "";
+        $gasto_exist = Egreso::where("id_egreso", $id)
+            ->where("id_usuario", $_SESSION['id'])
+            ->first();
+        if (!$gasto_exist) {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "El gasto no existe",
+                "icono" => "error"
+            ];
+            return json_encode($alerta);
+        }
+        // Cambiar estado
+        $nuevo_estado = ($gasto_exist->EgresoEstado == "activo") ? "inactivo" : "activo";
+        $cambio_estado = Egreso::where("id_egreso", $id)
+            ->update(["EgresoEstado" => $nuevo_estado]);
+        if ($cambio_estado) {
+            $alerta = [
+                "tipo" => "recargar",
+                "titulo" => "Cambio de estado exitoso",
+                "texto" => "El estado del gasto ha sido cambiado a " . $nuevo_estado . " exitosamente",
+                "icono" => "success"
+            ];
+        } else {
+            $alerta = [
+                "tipo" => "simple",
+                "titulo" => "Ocurrio un error inesperado",
+                "texto" => "No se pudo cambiar el estado del gasto",
+                "icono" => "error"
+            ];
+        }
+        return json_encode($alerta);
+    }
 
     public function actualizarGastoControlador()
     {
@@ -431,7 +468,7 @@ class gastoController extends mainModel
             return json_encode([
                 "tipo" => "simple",
                 "titulo" => "Error",
-                "texto" => "La categoría seleccionada no existe",
+                "texto" => "El gasto seleccionada no existe",
                 "icono" => "error"
             ]);
         }
