@@ -36,7 +36,7 @@
             ?>
         </form>
 
-        <p class="footer-text">© 2025 ManageMoneyWebsite</p>
+        <p class="footer-text">© 2026 Licitaciones</p>
     </div>
 
     <!-- Modal de Registro -->
